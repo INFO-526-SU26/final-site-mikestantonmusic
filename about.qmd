@@ -1,15 +1,9 @@
 ---
-title: "About"
+title: "Drivers of Lasting Streaming Performance"
 format: html
 editor: visual
 ---
 
-This project was developed by **\[Team Name\]** For [INFO 526 - Data Analysis and Visualization](https://datavizaz.org/) at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.
+This project was developed by **the ggmutants** For [INFO 526 - Data Analysis and Visualization](https://datavizaz.org/) at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.
 
--   Team member 1: One sentence description of Team member 1 (e.g., year, major, etc.).
-
--   Team member 2: One sentence description of Team member 2 (e.g., year, major, etc.).
-
--   Team member 3: One sentence description of Team member 3 (e.g., year, major, etc.).
-
--   Team member 4: One sentence description of Team member 4 (e.g., year, major, etc.).
+- Team member 1: Mike Stanton, a healthcare analyst with a background in music who couldn't handle the heat in Arizona and recently moved to Maryland.
