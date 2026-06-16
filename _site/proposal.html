@@ -4095,6 +4095,7 @@ vertical-align: -.125em;
   <li><a href="#dataset" id="toc-dataset" class="nav-link active" data-scroll-target="#dataset">Dataset</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions</a></li>
   <li><a href="#analysis-plan" id="toc-analysis-plan" class="nav-link" data-scroll-target="#analysis-plan">Analysis plan</a></li>
+  <li><a href="#weekly-plan-of-attack" id="toc-weekly-plan-of-attack" class="nav-link" data-scroll-target="#weekly-plan-of-attack"><strong>Weekly plan of attack:</strong></a></li>
   </ul>
 </nav>
     </div>
@@ -4105,7 +4106,7 @@ vertical-align: -.125em;
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">Drivers of Lasting Streaming Performance</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
-<p class="subtitle lead">Analysis of Streaming Performance Over Time Based on release date and availability</p>
+<p class="subtitle lead">Analysis of Streaming Performance Over Time Based on Release Date and Availability</p>
 </div>
 
 <div>
@@ -4149,7 +4150,14 @@ vertical-align: -.125em;
 <p>https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-29/readme.md</p>
 <p>The data set is separated into “movies”, and “shows”, with a separate pair of data sets for each 6 month time frame (8 csv files in total).</p>
 <p>For movies, the data set for each time frame contains the following columns:</p>
-<p>Source: The full name of the data source Report: Which 6 month time frame this data is referring to Title: The title of the movie Available Globally: If the movie is available globally Release Date: When the movie was released Hours Viewed: Total number of hours the movie was viewed by all audience members Run Time: Length of the movie Views: The number of views</p>
+<p>Source: The full name of the data source</p>
+<p>Report: Which 6 month time frame this data is referring to</p>
+<p>Title: The title of the movie</p>
+<p>Available Globally: If the movie is available globally</p>
+<p>Release Date: When the movie was released</p>
+<p>Hours Viewed: Total number of hours the movie was viewed by all audience members</p>
+<p>Run Time: Length of the movie</p>
+<p>Views: The number of views</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>movies_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/movies.csv&quot;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="fu">print</span>(<span class="st">&quot;Movies Dataset (from first half of 2025:&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4198,7 +4206,14 @@ vertical-align: -.125em;
 </div>
 </div>
 <p>For Shows, the data set for each time frame contains the following columns:</p>
-<p>Source: The full name of the data source Report: Which 6 month time frame this data is referring to Title: The title of the show Available Globally: If the show is available globally Release Date: When the show was released Hours Viewed: Total number of hours the show was viewed by all audience members Run Time: Length of the show Views: The number of views</p>
+<p>Source: The full name of the data source</p>
+<p>Report: Which 6 month time frame this data is referring to</p>
+<p>Title: The title of the show, including the season (for shows each show is separated by season)</p>
+<p>Available Globally: If the show is available globally</p>
+<p>Release Date: When the show was released</p>
+<p>Hours Viewed: Total number of hours the show was viewed by all audience members</p>
+<p>Run Time: Length of the show (the total runtime of the season)</p>
+<p>Views: The number of views</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>shows_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/shows.csv&quot;</span>)</span>
 <span id="cb14-2"><a href="#cb14-2"></a><span class="fu">print</span>(<span class="st">&quot;Shows Dataset (from first half of 2025:&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4220,9 +4235,9 @@ vertical-align: -.125em;
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">print</span>(<span class="st">&quot;Data Types&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">print</span>(<span class="st">&quot;Data Types: &quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] &quot;Data Types&quot;</code></pre>
+<pre><code>[1] &quot;Data Types: &quot;</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">spec</span>(shows_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -4237,9 +4252,9 @@ vertical-align: -.125em;
   views = col_double()
 )</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">print</span>(<span class="st">&quot;Number of Rows, Columns:&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">print</span>(<span class="st">&quot;Number of Rows, Columns: &quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] &quot;Number of Rows, Columns:&quot;</code></pre>
+<pre><code>[1] &quot;Number of Rows, Columns: &quot;</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">dim</span>(shows_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -4250,22 +4265,32 @@ vertical-align: -.125em;
 </section>
 <section id="questions" class="level2">
 <h2 class="anchored" data-anchor-id="questions">Questions</h2>
-<p>Question 1: What patterns and trends do we see between lasting popularity of content and the release date? In other words, does a specific era have an association with lasting popularity. For this we can look at not only how popular a movie or TV show is but also the decay or lack thereof over time. Release date can be grouped into buckets and treated as a categorical variable in different ways, or it could be analyzed as a continuous variable.</p>
-<p>Question 2: What patterns and trends do we see between lasting popularity of content and the run time? Does content of a specific length have any association with lasting popularity? For this we should account for whether the content is a show or a movie. Do movies with different lengths have stronger lasting popularity? What about shows with different lengths or different numbers of episodes? Run time could also be grouped into buckets and treated as a categorical variable, or analyzed as a continuous variable.</p>
+<p>Question 1: What patterns and trends do we see between lasting popularity (number of views, as well as hours viewed) of content and the release date? In other words, does a specific era have an association with lasting popularity. For this we can look at not only how popular a movie or TV show is but also the decay or lack thereof over time. Release date can be grouped into buckets and treated as a categorical variable in different ways, or it could be analyzed as a continuous variable.</p>
+<p>Question 2: What patterns and trends do we see between lasting popularity (number of views) of content and the run time, both for shows and for movies? Does content of a specific length have any association with lasting popularity? For this we should account for whether the content is a show or a movie. Do movies with different lengths have stronger lasting popularity? What about shows with different lengths or different numbers of episodes? Run time could also be grouped into buckets and treated as a categorical variable, or analyzed as a continuous variable.</p>
 </section>
 <section id="analysis-plan" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-plan">Analysis plan</h2>
 <p>Question 1:</p>
-<p>Calculate an “Age of Content” variable (Numeric) by subtracting the Release Date from the Report time-frame date. Create “Release Era” buckets (Categorical) based on data distribution (e.g., Pre-2010, 2010–2015, 2016–2020, 2021–2024, New Releases 2025+). Track the percentage drop or stability in Views for individual titles across the reports. Create box plots showing the distribution of Views or Hours Viewed grouped by custom “Release Era” buckets. Create scatter plots with Age of Content on the x-axis and Views on the y-axis. Fit a trend line to visually capture the “decay rate” of attention as content gets older. Potentially run an ANOVA test or other statistical tests to see if the average popularity differs significantly across eras.</p>
+<p>Calculate an “Age of Content” variable (Numeric) by subtracting the Release Date from the report time-frame date. Create “Release Era” buckets (Categorical) based on data distribution (e.g., Pre-2010, 2010–2015, 2016–2020, 2021–2024, New Releases 2025+). Group the data by age bucket. Create columns for “Average Views” and “Average Hours Viewed”, as well as “Title Count” for each age bucket.</p>
+<p>Create faceted line charts to show the trend of views across the weeks represented in the data, with each line representing an “age bucket”. A grouped bar chart could also potentially be layered onto the visual to show the volumes of each age bucket for added context. Interactive buttons can be added to switch between viewing the number of views vs the number of hours viewed on the Y axis. On the X axis could be simply the week of the movie/show, or it could be the age in weeks since the title’s release. (this might make it easier to compare “staying power” by having all of the lines decay together.)</p>
 <p>Question 2:</p>
-<p>Create a clean Content Type column from the relative data source file (movie vs show, Categorical). Create “Length Buckets” (Categorical). For Movies: Short (&lt;90 mins), Standard (90–130 mins), Epic (&gt;130 mins). For Shows: Bin them by total run time hours to approximate short vs. long seasons. Build scatter plots of Run Time vs. Views, but facet the plot by Content Type category (one panel for Movies, one for Shows). Compare the median Views and Hours Viewed across Movie and Show length buckets using grouped bar charts to see which specific lengths command the most sustained attention.</p>
-<p>Weekly plan of attack:</p>
-<p>Week 1: Data Ingestion &amp; Environmental Setup Set up repository and working environment, choose data set, and ingest the dataset via the GitHub URL. Run initial glimpse(), dim(), and summary() checks. Identify missing values (NA values), specifically in the Release Date or Run Time columns, and decide how to handle them (e.g., filtering them out or looking up missing pieces).</p>
-<p>Week 2: Feature Engineering &amp; Data Cleaning Write the R code to create categorical era buckets and content length buckets. Merge data and flag data into “Movies” vs. “TV Shows”. Calculate the content age/decay metrics. Print out small table summaries using count() to make sure custom categories have a healthy balance of rows.</p>
-<p>Week 3: Exploratory Data Analysis (EDA) &amp; Summary Statistics Calculate standard numeric summaries (mean, median, standard deviation) of Views and Hours Viewed across different categorical buckets. Look at the skewness of viewership data. Because streaming hits have massive outliers, decide if it is necessary to apply a log transformation to numeric axes for upcoming charts.</p>
-<p>Week 4: Data Visualization (Drafting the Core Plots) Develop Question 1 plots: The scatter plot tracking popularity decay over time, and the box plots comparing release eras. Develop Question 2 plots: The faceted scatter plots breaking down runtime trends by Movie vs. Show. Apply clean axis labels, custom scales, and clear legends.</p>
-<p>Week 5: Statistical Interpretation &amp; Narrative Writing Draft the written sections in Quarto document beneath code chunks. Interpret the charts: Does an older era hold a surprising amount of nostalgia/lasting popularity? Is there an optimal movie runtime that maximizes views? Use print statements within code to dynamically display key takeaway numbers directly inside report text.</p>
-<p>Week 6: Quarto Polishing, Code Review, and Formatting Render and double check all content. Finalize repository and record presentation.</p>
+<p>Create a clean Content Type column from the relative data source file (movie vs show, Categorical). Create “Length Buckets” (Categorical). For Movies: Short (&lt;90 mins), Standard (90–130 mins), Epic (&gt;130 mins). For Shows: Bin them by total run time hours to approximate short vs. long seasons. Group the data by run-time bucket and by type (show vs movie). Add a new column for average number of views as well as “Title Count”.</p>
+<p>Created faceted line charts to show the trend of views across the weeks represented in the data, with each line representing a duration/ run time bucket. On the X axis will be simply the week, and on the Y axis will be the average number of views. A grouped bar chart could also be potentially layered onto the visual to show the volumes of each “run time bucket” for added context. Interactive buttons can be added to switch between viewing shows vs movies.</p>
+</section>
+<section id="weekly-plan-of-attack" class="level2">
+<h2 class="anchored" data-anchor-id="weekly-plan-of-attack"><strong>Weekly plan of attack:</strong></h2>
+<p>Week 1: Data Ingestion &amp; Environmental Setup</p>
+<p>Set up repository and working environment, choose data set, and ingest the dataset via the GitHub URL. Run initial glimpse(), dim(), and summary() checks. Identify missing values (NA values), specifically in the Release Date or Run Time columns, and decide how to handle them (e.g., filtering them out or looking up missing pieces).</p>
+<p>Week 2: Feature Engineering &amp; Data Cleaning</p>
+<p>Create categorical era buckets and content length buckets. Merge data and flag data into “Movies” vs. “TV Shows”. Calculate the content age/decay metrics. Print out small table summaries using count() to make sure custom categories have a healthy balance of rows.</p>
+<p>Week 3: Exploratory Data Analysis (EDA) &amp; Summary Statistics</p>
+<p>Calculate standard numeric summaries (mean, median, standard deviation) of Views and Hours Viewed across different categorical buckets. Look at the skewness of viewership data. Because streaming hits have massive outliers, decide if it is necessary to apply a log transformation to numeric axes for upcoming charts.</p>
+<p>Week 4: Data Visualization (Drafting the Core Plots)</p>
+<p>Develop Question 1 plots: The scatter plot tracking popularity decay over time, and the box plots comparing release eras. Develop Question 2 plots: The faceted scatter plots breaking down runtime trends by Movie vs. Show. Apply clean axis labels, custom scales, and clear legends.</p>
+<p>Week 5: Statistical Interpretation &amp; Narrative Writing</p>
+<p>Draft the written sections in Quarto document beneath code chunks. Interpret the charts: Does an older era hold a surprising amount of nostalgia/lasting popularity? Is there an optimal movie runtime that maximizes views? Use print statements within code to dynamically display key takeaway numbers directly inside report text.</p>
+<p>Week 6: Quarto Polishing, Code Review, and Formatting</p>
+<p>Render and double check all content. Finalize repository and record presentation.</p>
 
 
 <!-- -->
@@ -4778,7 +4803,7 @@ vertical-align: -.125em;
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb26-1"><a href="#cb26-1"></a><span class="co">---</span></span>
 <span id="cb26-2"><a href="#cb26-2"></a><span class="an">title:</span><span class="co"> &quot;Drivers of Lasting Streaming Performance&quot;</span></span>
-<span id="cb26-3"><a href="#cb26-3"></a><span class="an">subtitle:</span><span class="co"> &quot;Analysis of Streaming Performance Over Time Based on release date and availability&quot;</span></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="an">subtitle:</span><span class="co"> &quot;Analysis of Streaming Performance Over Time Based on Release Date and Availability&quot;</span></span>
 <span id="cb26-4"><a href="#cb26-4"></a><span class="an">author:</span><span class="co"> </span></span>
 <span id="cb26-5"><a href="#cb26-5"></a><span class="co">  - name: &quot;Mike Stanton&quot;</span></span>
 <span id="cb26-6"><a href="#cb26-6"></a><span class="co">    affiliations:</span></span>
@@ -4809,114 +4834,129 @@ vertical-align: -.125em;
 <span id="cb26-33"><a href="#cb26-33"></a></span>
 <span id="cb26-34"><a href="#cb26-34"></a>https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-29/readme.md</span>
 <span id="cb26-35"><a href="#cb26-35"></a></span>
-<span id="cb26-36"><a href="#cb26-36"></a>The data set is separated into &quot;movies&quot;, and &quot;shows&quot;, with a separate pair of data sets for each 6 month time frame (8 csv files in total). </span>
+<span id="cb26-36"><a href="#cb26-36"></a>The data set is separated into &quot;movies&quot;, and &quot;shows&quot;, with a separate pair of data sets for each 6 month time frame (8 csv files in total).</span>
 <span id="cb26-37"><a href="#cb26-37"></a></span>
-<span id="cb26-38"><a href="#cb26-38"></a>For movies, the data set for each time frame contains the following columns: </span>
+<span id="cb26-38"><a href="#cb26-38"></a>For movies, the data set for each time frame contains the following columns:</span>
 <span id="cb26-39"><a href="#cb26-39"></a></span>
 <span id="cb26-40"><a href="#cb26-40"></a>Source: The full name of the data source</span>
-<span id="cb26-41"><a href="#cb26-41"></a>Report: Which 6 month time frame this data is referring to</span>
-<span id="cb26-42"><a href="#cb26-42"></a>Title: The title of the movie</span>
-<span id="cb26-43"><a href="#cb26-43"></a>Available Globally: If the movie is available globally</span>
-<span id="cb26-44"><a href="#cb26-44"></a>Release Date: When the movie was released</span>
-<span id="cb26-45"><a href="#cb26-45"></a>Hours Viewed: Total number of hours the movie was viewed by all audience members</span>
-<span id="cb26-46"><a href="#cb26-46"></a>Run Time: Length of the movie</span>
-<span id="cb26-47"><a href="#cb26-47"></a>Views: The number of views</span>
-<span id="cb26-48"><a href="#cb26-48"></a></span>
+<span id="cb26-41"><a href="#cb26-41"></a></span>
+<span id="cb26-42"><a href="#cb26-42"></a>Report: Which 6 month time frame this data is referring to</span>
+<span id="cb26-43"><a href="#cb26-43"></a></span>
+<span id="cb26-44"><a href="#cb26-44"></a>Title: The title of the movie</span>
+<span id="cb26-45"><a href="#cb26-45"></a></span>
+<span id="cb26-46"><a href="#cb26-46"></a>Available Globally: If the movie is available globally</span>
+<span id="cb26-47"><a href="#cb26-47"></a></span>
+<span id="cb26-48"><a href="#cb26-48"></a>Release Date: When the movie was released</span>
 <span id="cb26-49"><a href="#cb26-49"></a></span>
-<span id="cb26-50"><a href="#cb26-50"></a></span>
+<span id="cb26-50"><a href="#cb26-50"></a>Hours Viewed: Total number of hours the movie was viewed by all audience members</span>
 <span id="cb26-51"><a href="#cb26-51"></a></span>
-<span id="cb26-54"><a href="#cb26-54"></a><span class="in">```{r}</span></span>
-<span id="cb26-55"><a href="#cb26-55"></a><span class="co">#| label: load-dataset</span></span>
-<span id="cb26-56"><a href="#cb26-56"></a><span class="co">#| message: false</span></span>
-<span id="cb26-57"><a href="#cb26-57"></a></span>
-<span id="cb26-58"><a href="#cb26-58"></a>movies_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/movies.csv&quot;</span>)</span>
-<span id="cb26-59"><a href="#cb26-59"></a><span class="fu">print</span>(<span class="st">&quot;Movies Dataset (from first half of 2025:&quot;</span>)</span>
-<span id="cb26-60"><a href="#cb26-60"></a><span class="fu">head</span>(movies_data)</span>
-<span id="cb26-61"><a href="#cb26-61"></a><span class="in">```</span></span>
-<span id="cb26-62"><a href="#cb26-62"></a></span>
-<span id="cb26-65"><a href="#cb26-65"></a><span class="in">```{r}</span></span>
-<span id="cb26-66"><a href="#cb26-66"></a><span class="co">#| label: view-dimensions</span></span>
-<span id="cb26-67"><a href="#cb26-67"></a><span class="co">#| message: false</span></span>
-<span id="cb26-68"><a href="#cb26-68"></a></span>
-<span id="cb26-69"><a href="#cb26-69"></a><span class="fu">print</span>(<span class="st">&quot;Data Types&quot;</span>)</span>
-<span id="cb26-70"><a href="#cb26-70"></a><span class="fu">spec</span>(movies_data)</span>
-<span id="cb26-71"><a href="#cb26-71"></a><span class="fu">print</span>(<span class="st">&quot;Number of Rows, Columns:&quot;</span>)</span>
-<span id="cb26-72"><a href="#cb26-72"></a><span class="fu">dim</span>(movies_data)</span>
-<span id="cb26-73"><a href="#cb26-73"></a><span class="in">```</span></span>
-<span id="cb26-74"><a href="#cb26-74"></a></span>
-<span id="cb26-75"><a href="#cb26-75"></a>For Shows, the data set for each time frame contains the following columns: </span>
-<span id="cb26-76"><a href="#cb26-76"></a></span>
-<span id="cb26-77"><a href="#cb26-77"></a>Source: The full name of the data source</span>
-<span id="cb26-78"><a href="#cb26-78"></a>Report: Which 6 month time frame this data is referring to</span>
-<span id="cb26-79"><a href="#cb26-79"></a>Title: The title of the show</span>
-<span id="cb26-80"><a href="#cb26-80"></a>Available Globally: If the show is available globally</span>
-<span id="cb26-81"><a href="#cb26-81"></a>Release Date: When the show was released</span>
-<span id="cb26-82"><a href="#cb26-82"></a>Hours Viewed: Total number of hours the show was viewed by all audience members</span>
-<span id="cb26-83"><a href="#cb26-83"></a>Run Time: Length of the show</span>
-<span id="cb26-84"><a href="#cb26-84"></a>Views: The number of views</span>
-<span id="cb26-85"><a href="#cb26-85"></a></span>
-<span id="cb26-88"><a href="#cb26-88"></a><span class="in">```{r}</span></span>
-<span id="cb26-89"><a href="#cb26-89"></a><span class="co">#| label: load-dataset2</span></span>
-<span id="cb26-90"><a href="#cb26-90"></a><span class="co">#| message: false</span></span>
-<span id="cb26-91"><a href="#cb26-91"></a></span>
-<span id="cb26-92"><a href="#cb26-92"></a>shows_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/shows.csv&quot;</span>)</span>
-<span id="cb26-93"><a href="#cb26-93"></a><span class="fu">print</span>(<span class="st">&quot;Shows Dataset (from first half of 2025:&quot;</span>)</span>
-<span id="cb26-94"><a href="#cb26-94"></a><span class="fu">head</span>(shows_data)</span>
-<span id="cb26-95"><a href="#cb26-95"></a><span class="in">```</span></span>
+<span id="cb26-52"><a href="#cb26-52"></a>Run Time: Length of the movie</span>
+<span id="cb26-53"><a href="#cb26-53"></a></span>
+<span id="cb26-54"><a href="#cb26-54"></a>Views: The number of views</span>
+<span id="cb26-55"><a href="#cb26-55"></a></span>
+<span id="cb26-58"><a href="#cb26-58"></a><span class="in">```{r}</span></span>
+<span id="cb26-59"><a href="#cb26-59"></a><span class="co">#| label: load-dataset</span></span>
+<span id="cb26-60"><a href="#cb26-60"></a><span class="co">#| message: false</span></span>
+<span id="cb26-61"><a href="#cb26-61"></a></span>
+<span id="cb26-62"><a href="#cb26-62"></a>movies_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/movies.csv&quot;</span>)</span>
+<span id="cb26-63"><a href="#cb26-63"></a><span class="fu">print</span>(<span class="st">&quot;Movies Dataset (from first half of 2025:&quot;</span>)</span>
+<span id="cb26-64"><a href="#cb26-64"></a><span class="fu">head</span>(movies_data)</span>
+<span id="cb26-65"><a href="#cb26-65"></a><span class="in">```</span></span>
+<span id="cb26-66"><a href="#cb26-66"></a></span>
+<span id="cb26-69"><a href="#cb26-69"></a><span class="in">```{r}</span></span>
+<span id="cb26-70"><a href="#cb26-70"></a><span class="co">#| label: view-dimensions</span></span>
+<span id="cb26-71"><a href="#cb26-71"></a><span class="co">#| message: false</span></span>
+<span id="cb26-72"><a href="#cb26-72"></a></span>
+<span id="cb26-73"><a href="#cb26-73"></a><span class="fu">print</span>(<span class="st">&quot;Data Types&quot;</span>)</span>
+<span id="cb26-74"><a href="#cb26-74"></a><span class="fu">spec</span>(movies_data)</span>
+<span id="cb26-75"><a href="#cb26-75"></a><span class="fu">print</span>(<span class="st">&quot;Number of Rows, Columns:&quot;</span>)</span>
+<span id="cb26-76"><a href="#cb26-76"></a><span class="fu">dim</span>(movies_data)</span>
+<span id="cb26-77"><a href="#cb26-77"></a><span class="in">```</span></span>
+<span id="cb26-78"><a href="#cb26-78"></a></span>
+<span id="cb26-79"><a href="#cb26-79"></a>For Shows, the data set for each time frame contains the following columns:</span>
+<span id="cb26-80"><a href="#cb26-80"></a></span>
+<span id="cb26-81"><a href="#cb26-81"></a>Source: The full name of the data source</span>
+<span id="cb26-82"><a href="#cb26-82"></a></span>
+<span id="cb26-83"><a href="#cb26-83"></a>Report: Which 6 month time frame this data is referring to</span>
+<span id="cb26-84"><a href="#cb26-84"></a></span>
+<span id="cb26-85"><a href="#cb26-85"></a>Title: The title of the show, including the season (for shows each show is separated by season)</span>
+<span id="cb26-86"><a href="#cb26-86"></a></span>
+<span id="cb26-87"><a href="#cb26-87"></a>Available Globally: If the show is available globally</span>
+<span id="cb26-88"><a href="#cb26-88"></a></span>
+<span id="cb26-89"><a href="#cb26-89"></a>Release Date: When the show was released</span>
+<span id="cb26-90"><a href="#cb26-90"></a></span>
+<span id="cb26-91"><a href="#cb26-91"></a>Hours Viewed: Total number of hours the show was viewed by all audience members</span>
+<span id="cb26-92"><a href="#cb26-92"></a></span>
+<span id="cb26-93"><a href="#cb26-93"></a>Run Time: Length of the show (the total runtime of the season)</span>
+<span id="cb26-94"><a href="#cb26-94"></a></span>
+<span id="cb26-95"><a href="#cb26-95"></a>Views: The number of views</span>
 <span id="cb26-96"><a href="#cb26-96"></a></span>
-<span id="cb26-97"><a href="#cb26-97"></a></span>
-<span id="cb26-100"><a href="#cb26-100"></a><span class="in">```{r}</span></span>
-<span id="cb26-101"><a href="#cb26-101"></a><span class="co">#| label: view-dimensions2</span></span>
-<span id="cb26-102"><a href="#cb26-102"></a><span class="co">#| message: false</span></span>
-<span id="cb26-103"><a href="#cb26-103"></a></span>
-<span id="cb26-104"><a href="#cb26-104"></a><span class="fu">print</span>(<span class="st">&quot;Data Types&quot;</span>)</span>
-<span id="cb26-105"><a href="#cb26-105"></a><span class="fu">spec</span>(shows_data)</span>
-<span id="cb26-106"><a href="#cb26-106"></a><span class="fu">print</span>(<span class="st">&quot;Number of Rows, Columns:&quot;</span>)</span>
-<span id="cb26-107"><a href="#cb26-107"></a><span class="fu">dim</span>(shows_data)</span>
-<span id="cb26-108"><a href="#cb26-108"></a><span class="in">```</span></span>
-<span id="cb26-109"><a href="#cb26-109"></a></span>
-<span id="cb26-110"><a href="#cb26-110"></a></span>
-<span id="cb26-111"><a href="#cb26-111"></a></span>
-<span id="cb26-112"><a href="#cb26-112"></a>This data set was chosen because it has a variety of opportunities to explore both numerical (hours viewed,  views, run time),  categorical (type, global availability) and temporal (6 month timeframe, release data) data for answering research questions. Understanding this data can help businesses to better understand how to engage with their audiences.</span>
+<span id="cb26-99"><a href="#cb26-99"></a><span class="in">```{r}</span></span>
+<span id="cb26-100"><a href="#cb26-100"></a><span class="co">#| label: load-dataset2</span></span>
+<span id="cb26-101"><a href="#cb26-101"></a><span class="co">#| message: false</span></span>
+<span id="cb26-102"><a href="#cb26-102"></a></span>
+<span id="cb26-103"><a href="#cb26-103"></a>shows_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/shows.csv&quot;</span>)</span>
+<span id="cb26-104"><a href="#cb26-104"></a><span class="fu">print</span>(<span class="st">&quot;Shows Dataset (from first half of 2025:&quot;</span>)</span>
+<span id="cb26-105"><a href="#cb26-105"></a><span class="fu">head</span>(shows_data)</span>
+<span id="cb26-106"><a href="#cb26-106"></a><span class="in">```</span></span>
+<span id="cb26-107"><a href="#cb26-107"></a></span>
+<span id="cb26-110"><a href="#cb26-110"></a><span class="in">```{r}</span></span>
+<span id="cb26-111"><a href="#cb26-111"></a><span class="co">#| label: view-dimensions2</span></span>
+<span id="cb26-112"><a href="#cb26-112"></a><span class="co">#| message: false</span></span>
 <span id="cb26-113"><a href="#cb26-113"></a></span>
-<span id="cb26-114"><a href="#cb26-114"></a><span class="fu">## Questions</span></span>
-<span id="cb26-115"><a href="#cb26-115"></a></span>
-<span id="cb26-116"><a href="#cb26-116"></a>Question 1: What patterns and trends do we see between lasting popularity of content and the release date? In other words, does a specific era have an association with lasting popularity. For this we can look at not only how popular a movie or TV show is but also the decay or lack thereof over time. Release date can be grouped into buckets and treated as a categorical variable in different ways, or it could be analyzed as a continuous variable. </span>
-<span id="cb26-117"><a href="#cb26-117"></a></span>
-<span id="cb26-118"><a href="#cb26-118"></a>Question 2: What patterns and trends do we see between lasting popularity of content and the run time? Does content of a specific length have any association with lasting popularity? For this we should account for whether the content is a show or a movie. Do movies with different lengths have stronger lasting popularity? What about shows with different lengths or different numbers of episodes? Run time could also be grouped into buckets and treated as a categorical variable, or analyzed as a continuous variable. </span>
+<span id="cb26-114"><a href="#cb26-114"></a><span class="fu">print</span>(<span class="st">&quot;Data Types: &quot;</span>)</span>
+<span id="cb26-115"><a href="#cb26-115"></a><span class="fu">spec</span>(shows_data)</span>
+<span id="cb26-116"><a href="#cb26-116"></a><span class="fu">print</span>(<span class="st">&quot;Number of Rows, Columns: &quot;</span>)</span>
+<span id="cb26-117"><a href="#cb26-117"></a><span class="fu">dim</span>(shows_data)</span>
+<span id="cb26-118"><a href="#cb26-118"></a><span class="in">```</span></span>
 <span id="cb26-119"><a href="#cb26-119"></a></span>
-<span id="cb26-120"><a href="#cb26-120"></a><span class="fu">## Analysis plan</span></span>
+<span id="cb26-120"><a href="#cb26-120"></a>This data set was chosen because it has a variety of opportunities to explore both numerical (hours viewed, views, run time), categorical (type, global availability) and temporal (6 month timeframe, release data) data for answering research questions. Understanding this data can help businesses to better understand how to engage with their audiences.</span>
 <span id="cb26-121"><a href="#cb26-121"></a></span>
-<span id="cb26-122"><a href="#cb26-122"></a>Question 1: </span>
+<span id="cb26-122"><a href="#cb26-122"></a><span class="fu">## Questions</span></span>
 <span id="cb26-123"><a href="#cb26-123"></a></span>
-<span id="cb26-124"><a href="#cb26-124"></a>Calculate an &quot;Age of Content&quot; variable (Numeric) by subtracting the Release Date from the Report time-frame date. Create &quot;Release Era&quot; buckets (Categorical) based on data distribution (e.g., Pre-2010, 2010–2015, 2016–2020, 2021–2024, New Releases 2025+). Track the percentage drop or stability in Views for individual titles across the reports. </span>
-<span id="cb26-125"><a href="#cb26-125"></a>  Create box plots showing the distribution of Views or Hours Viewed grouped by custom &quot;Release Era&quot; buckets.  Create scatter plots with Age of Content on the x-axis and Views on the y-axis. Fit a trend line to visually capture the &quot;decay rate&quot; of attention as content gets older. Potentially run an ANOVA test or other statistical tests to see if the average popularity differs significantly across eras.</span>
-<span id="cb26-126"><a href="#cb26-126"></a></span>
-<span id="cb26-127"><a href="#cb26-127"></a>Question 2: </span>
-<span id="cb26-128"><a href="#cb26-128"></a></span>
-<span id="cb26-129"><a href="#cb26-129"></a>Create a clean Content Type column from the relative data source file (movie vs show, Categorical). Create &quot;Length Buckets&quot; (Categorical). For Movies: Short (&lt;90 mins), Standard (90–130 mins), Epic (&gt;130 mins). For Shows: Bin them by total run time hours to approximate short vs. long seasons.</span>
-<span id="cb26-130"><a href="#cb26-130"></a>  Build scatter plots of Run Time vs. Views, but facet the plot by Content Type category (one panel for Movies, one for Shows). Compare the median Views and Hours Viewed across Movie and Show length buckets using grouped bar charts to see which specific lengths command the most sustained attention.</span>
+<span id="cb26-124"><a href="#cb26-124"></a>Question 1: What patterns and trends do we see between lasting popularity (number of views, as well as hours viewed) of content and the release date? In other words, does a specific era have an association with lasting popularity. For this we can look at not only how popular a movie or TV show is but also the decay or lack thereof over time. Release date can be grouped into buckets and treated as a categorical variable in different ways, or it could be analyzed as a continuous variable.</span>
+<span id="cb26-125"><a href="#cb26-125"></a></span>
+<span id="cb26-126"><a href="#cb26-126"></a>Question 2: What patterns and trends do we see between lasting popularity (number of views) of content and the run time, both for shows and for movies? Does content of a specific length have any association with lasting popularity? For this we should account for whether the content is a show or a movie. Do movies with different lengths have stronger lasting popularity? What about shows with different lengths or different numbers of episodes? Run time could also be grouped into buckets and treated as a categorical variable, or analyzed as a continuous variable.</span>
+<span id="cb26-127"><a href="#cb26-127"></a></span>
+<span id="cb26-128"><a href="#cb26-128"></a><span class="fu">## Analysis plan</span></span>
+<span id="cb26-129"><a href="#cb26-129"></a></span>
+<span id="cb26-130"><a href="#cb26-130"></a>Question 1:</span>
 <span id="cb26-131"><a href="#cb26-131"></a></span>
-<span id="cb26-132"><a href="#cb26-132"></a>Weekly plan of attack: </span>
+<span id="cb26-132"><a href="#cb26-132"></a>Calculate an &quot;Age of Content&quot; variable (Numeric) by subtracting the Release Date from the report time-frame date. Create &quot;Release Era&quot; buckets (Categorical) based on data distribution (e.g., Pre-2010, 2010–2015, 2016–2020, 2021–2024, New Releases 2025+). Group the data by age bucket. Create columns for &quot;Average Views&quot; and &quot;Average Hours Viewed&quot;, as well as &quot;Title Count&quot; for each age bucket.</span>
 <span id="cb26-133"><a href="#cb26-133"></a></span>
-<span id="cb26-134"><a href="#cb26-134"></a>Week 1: Data Ingestion &amp; Environmental Setup</span>
-<span id="cb26-135"><a href="#cb26-135"></a>Set up repository and working environment, choose data set, and ingest the dataset via the GitHub URL. Run initial glimpse(), dim(), and summary() checks. Identify missing values (NA values), specifically in the Release Date or Run Time columns, and decide how to handle them (e.g., filtering them out or looking up missing pieces).</span>
-<span id="cb26-136"><a href="#cb26-136"></a></span>
-<span id="cb26-137"><a href="#cb26-137"></a>Week 2: Feature Engineering &amp; Data Cleaning</span>
-<span id="cb26-138"><a href="#cb26-138"></a>Write the R code to create categorical era buckets and content length buckets. Merge data and flag data into &quot;Movies&quot; vs. &quot;TV Shows&quot;. Calculate the content age/decay metrics. Print out small table summaries using count() to make sure custom categories have a healthy balance of rows.</span>
+<span id="cb26-134"><a href="#cb26-134"></a>Create faceted line charts to show the trend of views across the weeks represented in the data, with each line representing an &quot;age bucket&quot;. A grouped bar chart could also potentially be layered onto the visual to show the volumes of each age bucket for added context. Interactive buttons can be added to switch between viewing the number of views vs the number of hours viewed on the Y axis. On the X axis could be simply the week of the movie/show, or it could be the age in weeks since the title&#39;s release. (this might make it easier to compare &quot;staying power&quot; by having all of the lines decay together.)</span>
+<span id="cb26-135"><a href="#cb26-135"></a></span>
+<span id="cb26-136"><a href="#cb26-136"></a>Question 2:</span>
+<span id="cb26-137"><a href="#cb26-137"></a></span>
+<span id="cb26-138"><a href="#cb26-138"></a>Create a clean Content Type column from the relative data source file (movie vs show, Categorical). Create &quot;Length Buckets&quot; (Categorical). For Movies: Short (<span class="sc">\&lt;</span>90 mins), Standard (90–130 mins), Epic (<span class="sc">\&gt;</span>130 mins). For Shows: Bin them by total run time hours to approximate short vs. long seasons. Group the data by run-time bucket and by type (show vs movie). Add a new column for average number of views as well as &quot;Title Count&quot;.</span>
 <span id="cb26-139"><a href="#cb26-139"></a></span>
-<span id="cb26-140"><a href="#cb26-140"></a>Week 3: Exploratory Data Analysis (EDA) &amp; Summary Statistics</span>
-<span id="cb26-141"><a href="#cb26-141"></a>Calculate standard numeric summaries (mean, median, standard deviation) of Views and Hours Viewed across different categorical buckets. Look at the skewness of viewership data. Because streaming hits have massive outliers, decide if it is necessary to apply a log transformation to numeric axes for upcoming charts.</span>
-<span id="cb26-142"><a href="#cb26-142"></a></span>
-<span id="cb26-143"><a href="#cb26-143"></a>Week 4: Data Visualization (Drafting the Core Plots)</span>
-<span id="cb26-144"><a href="#cb26-144"></a>Develop Question 1 plots: The scatter plot tracking popularity decay over time, and the box plots comparing release eras. Develop Question 2 plots: The faceted scatter plots breaking down runtime trends by Movie vs. Show. Apply clean axis labels, custom scales, and clear legends.</span>
+<span id="cb26-140"><a href="#cb26-140"></a>Created faceted line charts to show the trend of views across the weeks represented in the data, with each line representing a duration/ run time bucket. On the X axis will be simply the week, and on the Y axis will be the average number of views. A grouped bar chart could also be potentially layered onto the visual to show the volumes of each &quot;run time bucket&quot; for added context. Interactive buttons can be added to switch between viewing shows vs movies.</span>
+<span id="cb26-141"><a href="#cb26-141"></a></span>
+<span id="cb26-142"><a href="#cb26-142"></a><span class="fu">## **Weekly plan of attack:**</span></span>
+<span id="cb26-143"><a href="#cb26-143"></a></span>
+<span id="cb26-144"><a href="#cb26-144"></a>Week 1: Data Ingestion &amp; Environmental Setup</span>
 <span id="cb26-145"><a href="#cb26-145"></a></span>
-<span id="cb26-146"><a href="#cb26-146"></a>Week 5: Statistical Interpretation &amp; Narrative Writing</span>
-<span id="cb26-147"><a href="#cb26-147"></a>Draft the written sections in Quarto document beneath code chunks. Interpret the charts: Does an older era hold a surprising amount of nostalgia/lasting popularity? Is there an optimal movie runtime that maximizes views? Use print statements within code to dynamically display key takeaway numbers directly inside report text.</span>
-<span id="cb26-148"><a href="#cb26-148"></a></span>
-<span id="cb26-149"><a href="#cb26-149"></a>Week 6: Quarto Polishing, Code Review, and Formatting</span>
-<span id="cb26-150"><a href="#cb26-150"></a>Render and double check all content. Finalize repository and record presentation. </span>
+<span id="cb26-146"><a href="#cb26-146"></a>Set up repository and working environment, choose data set, and ingest the dataset via the GitHub URL. Run initial glimpse(), dim(), and summary() checks. Identify missing values (NA values), specifically in the Release Date or Run Time columns, and decide how to handle them (e.g., filtering them out or looking up missing pieces).</span>
+<span id="cb26-147"><a href="#cb26-147"></a></span>
+<span id="cb26-148"><a href="#cb26-148"></a>Week 2: Feature Engineering &amp; Data Cleaning</span>
+<span id="cb26-149"><a href="#cb26-149"></a></span>
+<span id="cb26-150"><a href="#cb26-150"></a>Create categorical era buckets and content length buckets. Merge data and flag data into &quot;Movies&quot; vs. &quot;TV Shows&quot;. Calculate the content age/decay metrics. Print out small table summaries using count() to make sure custom categories have a healthy balance of rows.</span>
 <span id="cb26-151"><a href="#cb26-151"></a></span>
+<span id="cb26-152"><a href="#cb26-152"></a>Week 3: Exploratory Data Analysis (EDA) &amp; Summary Statistics</span>
+<span id="cb26-153"><a href="#cb26-153"></a></span>
+<span id="cb26-154"><a href="#cb26-154"></a>Calculate standard numeric summaries (mean, median, standard deviation) of Views and Hours Viewed across different categorical buckets. Look at the skewness of viewership data. Because streaming hits have massive outliers, decide if it is necessary to apply a log transformation to numeric axes for upcoming charts.</span>
+<span id="cb26-155"><a href="#cb26-155"></a></span>
+<span id="cb26-156"><a href="#cb26-156"></a>Week 4: Data Visualization (Drafting the Core Plots)</span>
+<span id="cb26-157"><a href="#cb26-157"></a></span>
+<span id="cb26-158"><a href="#cb26-158"></a>Develop Question 1 plots: The scatter plot tracking popularity decay over time, and the box plots comparing release eras. Develop Question 2 plots: The faceted scatter plots breaking down runtime trends by Movie vs. Show. Apply clean axis labels, custom scales, and clear legends.</span>
+<span id="cb26-159"><a href="#cb26-159"></a></span>
+<span id="cb26-160"><a href="#cb26-160"></a>Week 5: Statistical Interpretation &amp; Narrative Writing</span>
+<span id="cb26-161"><a href="#cb26-161"></a></span>
+<span id="cb26-162"><a href="#cb26-162"></a>Draft the written sections in Quarto document beneath code chunks. Interpret the charts: Does an older era hold a surprising amount of nostalgia/lasting popularity? Is there an optimal movie runtime that maximizes views? Use print statements within code to dynamically display key takeaway numbers directly inside report text.</span>
+<span id="cb26-163"><a href="#cb26-163"></a></span>
+<span id="cb26-164"><a href="#cb26-164"></a>Week 6: Quarto Polishing, Code Review, and Formatting</span>
+<span id="cb26-165"><a href="#cb26-165"></a></span>
+<span id="cb26-166"><a href="#cb26-166"></a>Render and double check all content. Finalize repository and record presentation.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
