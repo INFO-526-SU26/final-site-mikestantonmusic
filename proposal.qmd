@@ -31,9 +31,9 @@ Since 2023, Netflix has released regular Engagement Reports summarizing the numb
 
 https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-29/readme.md
 
-The data set is separated into "movies", and "shows", with a separate pair of data sets for each 6 month time frame (8 csv files in total). 
+The data set is separated into "movies", and "shows", with a separate pair of data sets for each 6 month time frame (8 csv files in total).
 
-For movies, the data set for each time frame contains the following columns: 
+For movies, the data set for each time frame contains the following columns:
 
 Source: The full name of the data source
 
@@ -50,9 +50,6 @@ Hours Viewed: Total number of hours the movie was viewed by all audience members
 Run Time: Length of the movie
 
 Views: The number of views
-
-
-
 
 ```{r}
 #| label: load-dataset
@@ -73,13 +70,13 @@ print("Number of Rows, Columns:")
 dim(movies_data)
 ```
 
-For Shows, the data set for each time frame contains the following columns: 
+For Shows, the data set for each time frame contains the following columns:
 
 Source: The full name of the data source
 
 Report: Which 6 month time frame this data is referring to
 
-Title: The title of the show
+Title: The title of the show, including the season (for shows each show is separated by season)
 
 Available Globally: If the show is available globally
 
@@ -87,7 +84,7 @@ Release Date: When the show was released
 
 Hours Viewed: Total number of hours the show was viewed by all audience members
 
-Run Time: Length of the show
+Run Time: Length of the show (the total runtime of the season)
 
 Views: The number of views
 
@@ -100,7 +97,6 @@ print("Shows Dataset (from first half of 2025:")
 head(shows_data)
 ```
 
-
 ```{r}
 #| label: view-dimensions2
 #| message: false
@@ -111,31 +107,29 @@ print("Number of Rows, Columns: ")
 dim(shows_data)
 ```
 
-
-
-This data set was chosen because it has a variety of opportunities to explore both numerical (hours viewed,  views, run time),  categorical (type, global availability) and temporal (6 month timeframe, release data) data for answering research questions. Understanding this data can help businesses to better understand how to engage with their audiences.
+This data set was chosen because it has a variety of opportunities to explore both numerical (hours viewed, views, run time), categorical (type, global availability) and temporal (6 month timeframe, release data) data for answering research questions. Understanding this data can help businesses to better understand how to engage with their audiences.
 
 ## Questions
 
-Question 1: What patterns and trends do we see between lasting popularity of content and the release date? In other words, does a specific era have an association with lasting popularity. For this we can look at not only how popular a movie or TV show is but also the decay or lack thereof over time. Release date can be grouped into buckets and treated as a categorical variable in different ways, or it could be analyzed as a continuous variable. 
+Question 1: What patterns and trends do we see between lasting popularity (number of views, as well as hours viewed) of content and the release date? In other words, does a specific era have an association with lasting popularity. For this we can look at not only how popular a movie or TV show is but also the decay or lack thereof over time. Release date can be grouped into buckets and treated as a categorical variable in different ways, or it could be analyzed as a continuous variable.
 
-Question 2: What patterns and trends do we see between lasting popularity of content and the run time? Does content of a specific length have any association with lasting popularity? For this we should account for whether the content is a show or a movie. Do movies with different lengths have stronger lasting popularity? What about shows with different lengths or different numbers of episodes? Run time could also be grouped into buckets and treated as a categorical variable, or analyzed as a continuous variable. 
+Question 2: What patterns and trends do we see between lasting popularity (number of views) of content and the run time, both for shows and for movies? Does content of a specific length have any association with lasting popularity? For this we should account for whether the content is a show or a movie. Do movies with different lengths have stronger lasting popularity? What about shows with different lengths or different numbers of episodes? Run time could also be grouped into buckets and treated as a categorical variable, or analyzed as a continuous variable.
 
 ## Analysis plan
 
-Question 1: 
+Question 1:
 
-Calculate an "Age of Content" variable (Numeric) by subtracting the Release Date from the report time-frame date. Create "Release Era" buckets (Categorical) based on data distribution (e.g., Pre-2010, 2010–2015, 2016–2020, 2021–2024, New Releases 2025+). Track the percentage drop or stability in Views for individual titles across the reports. 
+Calculate an "Age of Content" variable (Numeric) by subtracting the Release Date from the report time-frame date. Create "Release Era" buckets (Categorical) based on data distribution (e.g., Pre-2010, 2010–2015, 2016–2020, 2021–2024, New Releases 2025+). Group the data by age bucket. Create columns for "Average Views" and "Average Hours Viewed", as well as "Title Count" for each age bucket.
 
-  Create box plots showing the distribution of Views or Hours Viewed grouped by custom "Release Era" buckets.  Create scatter plots with Age of Content on the x-axis and Views on the y-axis. Fit a trend line to visually capture the "decay rate" of attention as content gets older. Potentially run an ANOVA test or other statistical tests to see if the average popularity differs significantly across eras.
+Create faceted line charts to show the trend of views across the weeks represented in the data, with each line representing an "age bucket". A grouped bar chart could also potentially be layered onto the visual to show the volumes of each age bucket for added context. Interactive buttons can be added to switch between viewing the number of views vs the number of hours viewed on the Y axis. On the X axis could be simply the week of the movie/show, or it could be the age in weeks since the title's release. (this might make it easier to compare "staying power" by having all of the lines decay together.)
 
-Question 2: 
+Question 2:
 
-Create a clean Content Type column from the relative data source file (movie vs show, Categorical). Create "Length Buckets" (Categorical). For Movies: Short (<90 mins), Standard (90–130 mins), Epic (>130 mins). For Shows: Bin them by total run time hours to approximate short vs. long seasons.
+Create a clean Content Type column from the relative data source file (movie vs show, Categorical). Create "Length Buckets" (Categorical). For Movies: Short (\<90 mins), Standard (90–130 mins), Epic (\>130 mins). For Shows: Bin them by total run time hours to approximate short vs. long seasons. Group the data by run-time bucket and by type (show vs movie). Add a new column for average number of views as well as "Title Count".
 
-  Build scatter plots of Run Time vs. Views, but facet the plot by Content Type category (one panel for Movies, one for Shows). Compare the median Views and Hours Viewed across Movie and Show length buckets using grouped bar charts to see which specific lengths command the most sustained attention.
+Created faceted line charts to show the trend of views across the weeks represented in the data, with each line representing a duration/ run time bucket. On the X axis will be simply the week, and on the Y axis will be the average number of views. A grouped bar chart could also be potentially layered onto the visual to show the volumes of each "run time bucket" for added context. Interactive buttons can be added to switch between viewing shows vs movies.
 
-Weekly plan of attack: 
+## **Weekly plan of attack:**
 
 Week 1: Data Ingestion & Environmental Setup
 
@@ -159,6 +153,4 @@ Draft the written sections in Quarto document beneath code chunks. Interpret the
 
 Week 6: Quarto Polishing, Code Review, and Formatting
 
-Render and double check all content. Finalize repository and record presentation. 
-
-
+Render and double check all content. Finalize repository and record presentation.
