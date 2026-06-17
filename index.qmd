@@ -1,11 +1,11 @@
 ---
-title: "Project Title"
+title: "Drivers of Lasting Streaming Performance"
 subtitle: "INFO 526 - Summer 2024 - Final Project"
 author: 
-  - name: "Team name"
+  - name: "The GG Mutant"
     affiliations:
       - name: "School of Information, University of Arizona"
-description: "Project description"
+description: "A visual exploration of the following questions: What patterns and trends do we see between lasting popularity (number of views, as well as hours viewed) of content and the release date? What patterns and trends do we see between lasting popularity (number of views) of content and the run time, both for shows and for movies?"
 format:
    html:
     code-tools: true
@@ -19,4 +19,10 @@ execute:
 
 ## Abstract
 
-Add project abstract here.
+Since 2023, Netflix has released regular Engagement Reports summarizing the number of hours that users have spent watching each show and movie in the last 6 months. This data set combines viewing data from late 2023 through the first half of 2025. The data was curated by Jen Richmond, RLadies-Sydney for the Tidy Tuesday challenge for the week of July 29, 2025 and can be found here:
+
+<https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-29/readme.md>
+
+Question 1: What patterns and trends do we see between lasting popularity (number of views, as well as hours viewed) of content and the release date? In other words, does a specific era have an association with lasting popularity. For this we can look at not only how popular a movie or TV show is but also the decay or lack thereof over time. Release date can be grouped into buckets and treated as a categorical variable in different ways, or it could be analyzed as a continuous variable.
+
+Question 2: What patterns and trends do we see between lasting popularity (number of views) of content and the run time, both for shows and for movies? Does content of a specific length have any association with lasting popularity? For this we should account for whether the content is a show or a movie. Do movies with different lengths have stronger lasting popularity? What about shows with different lengths or different numbers of episodes? Run time could also be grouped into buckets and treated as a categorical variable, or analyzed as a continuous variable.
