@@ -198,6 +198,207 @@ browsable(dashboard_html)
 
 ```
 
+## QUESTION 2
+
+
+
+```{r clean-data}
+movies_data <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/movies.csv')
+shows_data <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/shows.csv')
+
+# 1. Defensive function to convert "1H 54M", "2H", or "45M" to total minutes
+parse_runtime <- function(runtime_str) {
+  hours <- as.numeric(str_match(runtime_str, "(\\d+)H")[, 2])
+  minutes <- as.numeric(str_match(runtime_str, "(\\d+)M")[, 2])
+  
+  hours <- ifelse(is.na(hours), 0, hours)
+  minutes <- ifelse(is.na(minutes), 0, minutes)
+  
+  return((hours * 60) + minutes)
+}
+
+# 2. Clean Movies
+movies_clean <- movies_data %>%
+  filter(!is.na(runtime)) %>%
+  mutate(
+    type = "Movie",
+    runtime_minutes = parse_runtime(runtime),
+    # Use views if it exists, otherwise calculate it
+    views_calculated = if("views" %in% names(.)) as.numeric(views) else as.numeric(hours_viewed) / (runtime_minutes / 60)
+  )
+
+# 3. Clean Shows
+shows_clean <- shows_data %>%
+  filter(!is.na(runtime)) %>%
+  mutate(
+    type = "Show",
+    runtime_minutes = parse_runtime(runtime),
+    views_calculated = if("views" %in% names(.)) as.numeric(views) else as.numeric(hours_viewed) / (runtime_minutes / 60)
+  )
+
+# 4. Standardized Combine
+combined_base <- bind_rows(movies_clean, shows_clean)
+```
+
+```{r chunk-2-dates}
+combined_dates <- combined_base %>%
+  mutate(
+    # Safely convert release_date to an R Date object
+    release_date_clean = as.Date(release_date),
+    
+    # Use lubridate's ymd() or parse_date_time() to extract the date from strings like "2025Jan..."
+    # This automatically looks for a 4-digit year, month name/abbreviation, and day if present
+    report_date_clean = parse_date_time(report, orders = c("Y", "Ym", "Ybd", "ymd")),
+    report_date_clean = as.Date(report_date_clean), # Ensure it's a strict Date class
+    
+    # Calculate exact weeks elapsed
+    weeks_since_release = floor(as.numeric(report_date_clean - release_date_clean) / 7)
+  )
+
+
+
+```
+
+```{r}
+
+# 2. Add buckets without aggressive filtering yet
+combined_bucketed <- combined_dates %>%
+  mutate(
+    duration_bucket = case_when(
+      type == "Movie" & runtime_minutes < 90 ~ "Short (<90 mins)",
+      type == "Movie" & runtime_minutes >= 90 & runtime_minutes <= 130 ~ "Standard (90-130 mins)",
+      type == "Movie" & runtime_minutes > 130 ~ "Epic (>130 mins)",
+      
+      type == "Show" & runtime_minutes < 240 ~ "Short/Mini-Series (<4 hrs)",
+      type == "Show" & runtime_minutes >= 240 & runtime_minutes <= 480 ~ "Standard Season (4-8 hrs)",
+      type == "Show" & runtime_minutes > 480 ~ "Binge/Long Season (>8 hrs)",
+      TRUE ~ "Other"
+    )
+  )
+
+# 3. Aggregate safely (we will filter downstream instead of upstream)
+weekly_trends <- combined_bucketed %>%
+  group_by(type, duration_bucket, weeks_since_release) %>%
+  summarise(
+    avg_views = mean(views, na.rm = TRUE),
+    title_count = n_distinct(title),
+    .groups = "drop"
+  ) %>%
+  # Filter only positive weeks, up to 24 weeks
+  filter(!is.na(weeks_since_release), weeks_since_release >= 0, weeks_since_release <= 24)
+
+```
+
+
+```{r native-plotly-toggle, message=FALSE, warning=FALSE}
+#| fig-width: 14
+#| fig-height: 7
+#| out-width: "100%"
+
+library(plotly)
+library(dplyr)
+
+# Split the data into separate dataframes for pristine control
+movie_trends <- weekly_trends %>% filter(type == "Movie")
+show_trends  <- weekly_trends %>% filter(type == "Show")
+
+# Get unique buckets to loop through/map consistently
+movie_buckets <- unique(movie_trends$duration_bucket)
+show_buckets  <- unique(show_trends$duration_bucket)
+
+# Initialize the plot
+p <- plot_ly()
+
+# 1. Add MOVIE lines (Traces 1 to N)
+for(bucket in movie_buckets) {
+  bucket_data <- movie_trends %>% filter(duration_bucket == bucket)
+  p <- p %>% add_trace(
+    data = bucket_data,
+    x = ~weeks_since_release,
+    y = ~avg_views,
+    name = bucket,
+    type = 'scatter',
+    mode = 'lines', # or 'lines+markers'
+    visible = TRUE, # Movies visible by default
+    hovertemplate = paste0("<b>", bucket, "</b><br>Week: %{x}<br>Avg Views: %{y:,.0f}<extra></extra>")
+  )
+}
+
+# 2. Add SHOW lines (Traces N+1 to M)
+for(bucket in show_buckets) {
+  bucket_data <- show_trends %>% filter(duration_bucket == bucket)
+  p <- p %>% add_trace(
+    data = bucket_data,
+    x = ~weeks_since_release,
+    y = ~avg_views,
+    name = bucket,
+    type = 'scatter',
+    mode = 'lines',
+    visible = FALSE, # Hidden by default
+    hovertemplate = paste0("<b>", bucket, "</b><br>Week: %{x}<br>Avg Views: %{y:,.0f}<extra></extra>")
+  )
+}
+
+# 3. Define the visibility vectors explicitly
+# We need a TRUE/FALSE flag for every single trace we just created
+total_movie_traces <- length(movie_buckets)
+total_show_traces  <- length(show_buckets)
+
+movie_visibility <- c(rep(TRUE, total_movie_traces), rep(FALSE, total_show_traces))
+show_visibility  <- c(rep(FALSE, total_movie_traces), rep(TRUE, total_show_traces))
+
+# 4. Add the layout and the working toggle buttons
+p %>% layout(
+  title = list(text = "Content Decay Curves: Lasting Popularity by Runtime", y = 0.95),
+  
+  # IMPROVEMENT: Clean up the axes and add vertical tracking lines on hover
+  xaxis = list(
+    title = "Weeks Since Release", 
+    dtick = 4,
+    showspikes = TRUE,          # Turns on vertical hover guide line
+    spikemode = "across",
+    spikesnap = "cursor",
+    spikethickness = 1,
+    spikedash = "dash"
+  ),
+  yaxis = list(
+    title = "Average Views",
+    tickvals = seq(0, 25000000, by = 5000000),
+    ticktext = c("0 ", "5 Million ", "10 Million ", "15 Million ", "20 Million ", "25 Million "),
+    tickmargin = 20     # Adds extra padding so the long text doesn't crowd the axis line
+  ),
+  
+  # IMPROVEMENT: Lift the buttons slightly higher (from 1.12 to 1.16)
+  margin = list(t = 100),
+  hovermode = "x unified",
+  updatemenus = list(
+    list(
+      type = "buttons",
+      direction = "right",
+      x = 0.5,
+      y = 1.16, 
+      xanchor = "center",
+      active = 0,
+      buttons = list(
+        list(
+          method = "restyle",
+          args = list("visible", as.list(movie_visibility)),
+          label = "View Movies"
+        ),
+        list(
+          method = "restyle",
+          args = list("visible", as.list(show_visibility)),
+          label = "View Shows"
+        )
+      )
+    )
+  )
+)
+```
+
+
+
+
 
 
 
