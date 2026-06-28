@@ -1,7 +1,7 @@
 ---
-title: "Project title"
-subtitle: "INFO 526 - Summer 2024 - Final Project"
-author: "Author names"
+title: "Drivers of Lasting Streaming Performance"
+subtitle: "INFO 526 - Summer 2026 - Final Project"
+author: "Mike Stanton"
 title-slide-attributes:
   data-background-image: images/watercolour_sys02_img34_teacup-ocean.jpg
   data-background-size: stretch
@@ -22,7 +22,9 @@ execute:
 
 # Load packages here
 pacman::p_load(tidymodels,
-               tidyverse)
+               tidyverse,
+               plotly,
+               lubridate)
 
 ```
 
@@ -46,48 +48,200 @@ knitr::opts_chunk$set(
 #| label: load-data
 #| include: false
 # Load data here
-data(mtcars)
-mtcars$speed <- mtcars$hp / mtcars$wt
+movies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/movies.csv')
+shows <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-29/shows.csv')
 
-data("penguins")
+all_data_raw <- bind_rows(movies, shows)
+print(all_data_raw)
 ```
+
+```{r}
+
+# 1. Clean and Transform
+all_data_cleaned <- all_data_raw %>%
+  # Ensure release_date is a Date object and drop missing values
+  filter(!is.na(release_date), !is.na(hours_viewed)) %>%
+  
+  # Map your report_period IDs to an actual anchor Date for age calculations
+  # Adjust these dates based on the exact coverage of the 6-month reports
+  mutate(
+    report_date = case_when(
+      report == "2023Jul-Dec" ~ as.Date("2023-12-31"),
+      report == "2024Jan-Jun" ~ as.Date("2024-06-30"),
+      report == "2024Jul-Dec" ~ as.Date("2024-12-31"),
+      report == "2025Jan-Jun" ~ as.Date("2025-06-30"),
+      TRUE ~ as.Date("2025-06-30")
+    )
+  ) %>%
+  
+  # CRITICAL FIX: Calculate age relative to release (all titles now start at 0)
+  mutate(
+    age_in_weeks = as.numeric(difftime(report_date, release_date, units = "weeks"))
+  ) %>%
+  
+  # Filter out negative ages and truncate extreme long-tails for comparison readability
+  filter(age_in_weeks >= 0) %>% # Looking at the first 3 years of life max
+  
+  # Round to weeks for grouping calculations
+  mutate(age_binned = round(age_in_weeks)) %>%
+  
+# Extract the exact calendar year from the release date
+  mutate(
+    release_year_num = lubridate::year(release_date)
+  ) %>%
+  
+  # Optional but recommended: Filter out very old sparse data 
+  # so you only look at the most robust years (e.g., 2015 to 2025)
+  filter(release_year_num >= 2015) %>% 
+  
+  # Convert to a factor/categorical variable for ggplot colors
+  mutate(
+    release_year = as.factor(release_year_num)
+  )
+
+# 2. Aggregate Data
+aggregated_trends <- all_data_cleaned %>%
+  group_by(release_year, age_binned) %>%
+  summarise(
+    avg_hours = mean(hours_viewed, na.rm = TRUE),
+    avg_views = if("views" %in% names(.)) mean(views, na.rm = TRUE) else mean(hours_viewed / 2, na.rm = TRUE), 
+    title_count = n(),
+    .groups = "drop"
+  ) %>% # Keep the pipe operator here
+  
+  # ADD THIS NEW MUTATE FUNCTION HERE:
+  mutate(
+    log_views = log10(avg_views),
+    log_hours = log10(avg_hours)
+  )
+
+
+
+```
+
+
+
+
+
+
+```{r}
+
+#| fig-width: 14
+#| fig-height: 7
+#| out-width: "100%"
+
+library(crosstalk)
+library(htmltools)
+
+# 1. Build Plot A: Total Views (Perfect and Untouched)
+p1 <- ggplot(aggregated_trends, aes(x = age_binned, y = log_views, color = release_year, group = release_year)) +
+  geom_smooth(aes(
+    alpha = title_count,
+    text = paste0("Year: ", release_year, "<br>Age: ", age_binned, " weeks<br>Avg Views: ", scales::comma(avg_views), "<br>Titles: ", title_count)
+  ), method = "loess", se = FALSE, span = 0.4, size = 1.2) +
+  scale_alpha_continuous(range = c(0.4, 1.0), guide = "none") + 
+  labs(
+    title = "Content Trends by Release Year: Total Views",
+    x = "Weeks Since Release (Aligned to Week 0)",
+    y = "Log10 of Average Views",
+    color = "Release Year"
+  ) +
+  theme_minimal() +
+  facet_wrap(~ release_year, scales = "free_x", ncol = 4) + 
+  theme(
+    legend.position = "none", 
+    strip.text = element_text(face = "bold", size = 10)
+  )
+
+# 2. Build Plot B: Hours Watched (Perfect and Untouched)
+p2 <- ggplot(aggregated_trends, aes(x = age_binned, y = log_hours, color = release_year, group = release_year)) +
+  geom_smooth(aes(
+    alpha = title_count,
+    text = paste0("Year: ", release_year, "<br>Age: ", age_binned, " weeks<br>Avg Hours: ", scales::comma(avg_hours), "<br>Titles: ", title_count)
+  ), method = "loess", se = FALSE, span = 0.4, size = 1.2) +
+  scale_alpha_continuous(range = c(0.4, 1.0), guide = "none") + 
+  labs(
+    title = "Content Trends by Release Year: Hours Watched",
+    x = "Weeks Since Release (Aligned to Week 0)",
+    y = "Log10 of Average Hours Watched", 
+    color = "Release Year"
+  ) +
+  theme_minimal() +
+  facet_wrap(~ release_year, scales = "free_x", ncol = 4) + 
+  theme(
+    legend.position = "none", 
+    strip.text = element_text(face = "bold", size = 10)
+  )
+
+# Convert both cleanly to independent, crisp plotly objects
+plotly_views <- ggplotly(p1, width = 1150, height = 550, tooltip = "text") %>%
+  layout(margin = list(t = 80, b = 60, l = 70, r = 40))
+
+plotly_hours <- ggplotly(p2, width = 1150, height = 550, tooltip = "text") %>%
+  layout(margin = list(t = 80, b = 60, l = 70, r = 40))
+
+# 3. Create a pristine HTML/JavaScript container with native toggle buttons
+# This bypasses the buggy internal plotly layout engine completely
+dashboard_html <- tags$div(
+  tags$div(
+    style = "margin-bottom: 15px;",
+    tags$button("View by Total Views", onclick = "document.getElementById('views-plot').style.display='block'; document.getElementById('hours-plot').style.display='none'; this.className='btn btn-primary'; this.nextElementSibling.className='btn btn-outline-primary';", class="btn btn-primary", style="margin-right: 10px;"),
+    tags$button("View by Hours Watched", onclick = "document.getElementById('views-plot').style.display='none'; document.getElementById('hours-plot').style.display='block'; this.previousElementSibling.className='btn btn-outline-primary'; this.className='btn btn-primary';", class="btn btn-outline-primary")
+  ),
+  tags$div(id = "views-plot", style = "display: block;", plotly_views),
+  tags$div(id = "hours-plot", style = "display: none;", plotly_hours)
+)
+
+# Render the clean dashboard structure
+browsable(dashboard_html)
+
+
+```
+
+
+
+
+
+
+
+
 
 # Using Quarto for presentations
 
 ## Quarto
 
--   The presentation is created using the Quarto CLI
+- The presentation is created using the Quarto CLI
 
--   `##` sets the start of a new slide
+- `##` sets the start of a new slide
 
 ## Layouts
 
 You can use plain text
 
-::: columns
+::::: columns
 ::: {.column width="40%"}
--   or bullet points[^1]
+- or bullet points[^1]
 :::
 
 ::: {.column width="60%"}
 or in two columns
 :::
-:::
+:::::
 
 [^1]: And add footnotes
 
--   like
+- like
 
--   this
+- this
 
 ## Code
 
 ```{r, echo=FALSE}
-model <- lm(mpg ~ speed, data = mtcars) 
+#model <- lm(mpg ~ speed, data = mtcars) 
 
-model |> tidy()
+#model |> tidy()
 
-model |> glance()
+#model |> glance()
 
 ```
 
@@ -102,11 +256,11 @@ penguins |>
 
 ## Plot and text
 
-::: columns
+::::: columns
 ::: {.column width="50%"}
--   Some text
+- Some text
 
--   goes here
+- goes here
 :::
 
 ::: {.column width="50%"}
@@ -119,7 +273,7 @@ penguins |>
   theme(legend.key.size = unit(0.8, "cm"))
 ```
 :::
-:::
+:::::
 
 # A new section...
 
@@ -128,10 +282,10 @@ penguins |>
 If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
 
 ```{r}
-penguins |> 
-  head() |>
-  kableExtra::kable() |>
-  kableExtra::kable_styling()
+#penguins |> 
+  #head() |>
+  #kableExtra::kable() |>
+  #kableExtra::kable_styling()
 ```
 
 ## Images
@@ -146,9 +300,7 @@ You can write LaTeX math expressions inside a pair of dollar signs, e.g. \$\\al
 $$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
 ```
 
-$$
-\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i
-$$
+$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
 
 Limitations:
 
@@ -160,6 +312,6 @@ Limitations:
 
 ## Feeling adventurous?
 
--   You are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
+- You are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
 
--   But some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs.
+- But some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs.
